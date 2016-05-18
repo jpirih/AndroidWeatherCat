@@ -6,18 +6,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.kekec_apps.android.weathercat.model.WeatherData;
 
 public class SecondActivity extends AppCompatActivity {
     private static final String TAG = "SecondActivity";
-
-
+    public static final String EXTRA_WEATHER_DATA  = "vremenski podatek";
+    private  WeatherData weatherData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
         Log.v(TAG, "App is onCreate NOW");
+        setContentView(R.layout.activity_second);
+        Bundle extras = getIntent().getExtras();
+        weatherData = extras.getParcelable(EXTRA_WEATHER_DATA);
+        setTitle(weatherData.getName());
 
         Button backMain = (Button) findViewById(R.id.backMain);
         backMain.setOnClickListener(new View.OnClickListener() {
@@ -28,6 +32,11 @@ public class SecondActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        TextView tempViev = (TextView) findViewById(R.id.temperatue);
+        tempViev.setText(getString(R.string.temperature, weatherData.getMain().getTemp()));
+
 
     }
 

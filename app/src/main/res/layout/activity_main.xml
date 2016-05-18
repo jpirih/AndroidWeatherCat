@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="Pregled temperatur"
             android:textColor="#000000"
-            android:textSize="30dp"
+            android:textSize="45dp"
             android:id="@+id/opis"
             android:layout_below="@+id/button"
             android:layout_alignParentStart="true"
