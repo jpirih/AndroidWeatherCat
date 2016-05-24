@@ -3,6 +3,7 @@ package com.kekec_apps.android.weathercat;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,11 +11,36 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kekec_apps.android.weathercat.model.WeatherData;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private CitiesAdapter adapter;
+    private final OkHttpClient client = new OkHttpClient();
+
+    String cityIds = TextUtils.join(",", new Integer[]{
+            3239318
+    });
+
+    HttpUrl url = new HttpUrl.Builder()
+            .scheme("http")
+            .host("api.openweathermap.org")
+            .addPathSegment("/data/2.5/group")
+            .addQueryParameter("id", cityIds)
+            .addQueryParameter("units", "metric")
+            .addQueryParameter("appid", "425d08d39ad4a87c17bcb351795ba4c3")
+            .build();
+
+    Request request = new Request.Builder().url(url).build();
+  // work in progress ...
 
     public static final WeatherData[] DATA = new WeatherData[] {
             new WeatherData(3239318, "Mestna Občina Ljubljana", 13.91f),
@@ -42,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Log.v(TAG, "OnCreate function ");
         Button refresh = (Button) findViewById(R.id.button);
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // list wiew
+        // svoj thread za branje api-ja
+
         adapter = new CitiesAdapter(this);
         adapter.setItems(DATA);
 
