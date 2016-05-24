@@ -53,15 +53,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button second = (Button) findViewById(R.id.second);
-        second.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v(TAG, "Click go to  SecondActivity button");
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                startActivity(intent);
-            }
-        });
 
         // list wiew
         adapter = new CitiesAdapter(this);
