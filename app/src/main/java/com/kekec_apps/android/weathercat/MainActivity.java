@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.kekec_apps.android.weathercat.model.Cities;
 import com.kekec_apps.android.weathercat.model.WeatherData;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -26,42 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private CitiesAdapter adapter;
     private final OkHttpClient client = new OkHttpClient();
 
-    String cityIds = TextUtils.join(",", new Integer[]{
-            3239318
-    });
-
-    HttpUrl url = new HttpUrl.Builder()
-            .scheme("http")
-            .host("api.openweathermap.org")
-            .addPathSegment("/data/2.5/group")
-            .addQueryParameter("id", cityIds)
-            .addQueryParameter("units", "metric")
-            .addQueryParameter("appid", "425d08d39ad4a87c17bcb351795ba4c3")
-            .build();
-
-    Request request = new Request.Builder().url(url).build();
-  // work in progress ...
-
-    public static final WeatherData[] DATA = new WeatherData[] {
-            new WeatherData(3239318, "Mestna Občina Ljubljana", 13.91f),
-            new WeatherData(3186843, "Občina Žalec", 13.91f),
-            new WeatherData(3192062, "Občina Radovljica", 13.91f),
-            new WeatherData(3197378, "Kranj", 13.91f),
-            new WeatherData(3194351, "Novo Mesto", 15.91f),
-            new WeatherData(3198647, "Jesenice", 13.91f),
-            new WeatherData(3192241, "Ptuj", 17.21f),
-            new WeatherData(3195506, "Maribor", 13.25f),
-            new WeatherData(5128638, "New York", 17.91f),
-            new WeatherData(1689973, "San Francisco", 13.91f),
-            new WeatherData(3186886, "Zagreb", 13.91f),
-            new WeatherData(2759794, "Amsterdam", 13.91f),
-            new WeatherData(5056033, "London", 13.91f),
-            new WeatherData(2950159, "Berlin", 13.91f),
-            new WeatherData(2988507, "Paris", 13.91f),
-            new WeatherData(292223, "Dubai", 13.91f),
-            new WeatherData(1609350, "Bangkok", 13.91f),
-            new WeatherData(1138958, "Kabul", 13.91f)
-    };
 
 
     @Override
@@ -85,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         // svoj thread za branje api-ja
 
         adapter = new CitiesAdapter(this);
-        adapter.setItems(DATA);
+        makeNetworkRquest();
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
@@ -98,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
 
     }
@@ -118,5 +85,56 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG, "Application is now powered off");
+    }
+
+
+    // funkcija za povezavo do povezavo do openWeather appi-ja  OKHTTP client
+    private void makeNetworkRquest()
+    {
+        String cityIds = TextUtils.join(",", new Integer[]{
+                3239318,3199523,3195281,3203611,3195506,3197378,
+                3196359,3199171,3202781,3201730,3192682,3190536,3194351,3189075,3190717,3194452,
+                3197753,3194648,3197147,3198647,3186906,3193341,3189038,3196681,3203925,3188915,
+                3192241,3192673,3203412,3197943,3199131,3193299,3186450,3186607,3186844,3187125,3187214,
+                3187448,3187690,3188684,3188688,3188886,3190219,3190311,3190530,3190534,3190712,3190945,
+                3190950,3191029,3191044,3191059,3191062,3191063,3191401,3191580,3191685,3191845,3192021,
+                3192063,3192121,3192139,3192144,3192165,3192484,3192762,3193011,3193965,3194622,3194792,
+                3195162,3195202,3195214,3195250,3196165,3196307,3196425,3196560,3196652,3196682,3196760,
+                3198365,3199162,3199297,3200197,3200385,3201253,3202333,3202459,3202709,3203338,3203677,
+                3204303,3204854,3216508,3217862,3218907,3220262,3339120,3343512,3343518
+        });
+
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme("http")
+                .host("api.openweathermap.org")
+                .addPathSegment("/data/2.5/group")
+                .addQueryParameter("id", cityIds)
+                .addQueryParameter("units", "metric")
+                .addQueryParameter("appid", "425d08d39ad4a87c17bcb351795ba4c3")
+                .build();
+
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                Gson gson = new Gson();
+                final Cities cities = gson.fromJson(response.body().string(), Cities.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setData(cities.getList());
+                    }
+                });
+
+            }
+        });
+
     }
 }

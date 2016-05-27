@@ -23,34 +23,29 @@ import com.kekec_apps.android.weathercat.model.WeatherData;
 
 public class CitiesAdapter extends BaseAdapter {
 
-    private final LayoutInflater inflater;
-    private WeatherData[] data;
-    private final String TAG = "Cities Adapter";
+    private final LayoutInflater layoutInflater;
     private final Resources resources;
+    private WeatherData[] data;
 
-    // Konstruktor
-    public CitiesAdapter(Context context){
-
-        this.inflater = LayoutInflater.from(context);
+    public CitiesAdapter(Context context) {
+        this.layoutInflater = LayoutInflater.from(context);
         this.resources = context.getResources();
     }
 
-    public void setItems(WeatherData[] data){
+    public void setData(WeatherData[] data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
-
-    // how many items is in the list
     @Override
     public int getCount() {
-        if(data != null){
+        if (data != null) {
             return data.length;
-        }else{
+        } else {
             return 0;
         }
     }
-    // element na seznamu
+
     @Override
     public WeatherData getItem(int position) {
         return data[position];
@@ -63,24 +58,29 @@ public class CitiesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View view = convertView;
-        if(view == null){
-            view = inflater.inflate(R.layout.list_item_city, parent, false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.list_item_city, parent, false);
         }
+
         WeatherData item = getItem(position);
+
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(item.getName());
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.image);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image);
         new ImageTask(resources, imageView).execute(R.drawable.sonce);
+
         return view;
     }
 
-    private static class ImageTask extends AsyncTask<Integer, Void, Drawable>{
-        private  final Resources resources;
+    private static class ImageTask extends AsyncTask<Integer, Void, Drawable> {
+
+        private final Resources resources;
         private final ImageView imageView;
 
-        private ImageTask(Resources resources, ImageView imageView) {
+        public ImageTask(Resources resources, ImageView imageView) {
             this.resources = resources;
             this.imageView = imageView;
         }
@@ -89,10 +89,11 @@ public class CitiesAdapter extends BaseAdapter {
         protected Drawable doInBackground(Integer... params) {
             return resources.getDrawable(params[0], null);
         }
-        @Override
-        protected void onPostExecute(Drawable drawable){
-            imageView.setImageDrawable(drawable);
 
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            imageView.setImageDrawable(drawable);
         }
     }
+
 }
