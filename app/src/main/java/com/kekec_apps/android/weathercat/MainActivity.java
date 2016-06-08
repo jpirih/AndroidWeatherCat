@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.kekec_apps.android.weathercat.model.WeatherData;
+import com.kekec_apps.android.weathercat.service.FavouriteService;
 
 import java.io.IOException;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements ShowDetail
         setContentView(R.layout.activity_main);
 
         isLendscape = findViewById(R.id.content) != null;
+
+
     }
 
     @Override
