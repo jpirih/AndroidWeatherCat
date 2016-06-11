@@ -7,6 +7,12 @@
     android:padding="8dp"
     tools:context="com.kekec_apps.android.weathercat.SecondActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/city_image"
+        android:scaleType="centerCrop"/>
+
 
     <TextView
         android:layout_width="wrap_content"
