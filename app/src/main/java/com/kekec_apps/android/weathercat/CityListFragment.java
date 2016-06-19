@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -66,6 +69,8 @@ public class CityListFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         // list wiew
         // svoj thread za branje api-ja
 
@@ -86,7 +91,23 @@ public class CityListFragment extends Fragment
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_city_list, menu);
+    }
+    // klik na ikono menu  trenutna lokacija
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_location:
+                Intent intent = new Intent(getContext(), LocationActivity.class);
+                startActivity(intent);
+                return true;
 
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private class LoadTask extends AsyncTask<Void, Void, Cities> {
         private final Context context;

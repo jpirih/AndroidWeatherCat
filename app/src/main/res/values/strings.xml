@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">WeatherCat</string>
     <string name="temperature">%1$.1f °C</string>
+    <string name="enter_your_name_textView">Enter your name</string>
+    <string name="etner_name_btn_text">Etner Name</string>
+    <string name="the_calling_activity_message">The calling activity was:</string>
 </resources>
